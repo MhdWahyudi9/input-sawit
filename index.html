@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Form Input Gaji</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        table, th, td {
+            border: 1px solid black;
+            padding: 10px;
+            text-align: center;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        input[type="text"], input[type="number"], select {
+            width: 100%;
+            padding: 8px;
+            margin: 5px 0;
+        }
+        button {
+            padding: 10px 15px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <h2>Form Penjumlahan</h2>
+    <label for="hasilSawit">Hasil Sawit:</label>
+    <input type="number" id="hasilSawit" required>
+    <button type="button" onclick="calculatePenjumlahan()">Hitung</button>
+    <p id="result"></p>
+
+    <h2>Form Penjumlahan Hasil</h2>
+    <form id="salaryForm">
+        <label for="nama">Nama:</label>
+        <select id="nama">
+            <option value="TONI">TONI</option>
+            <option value="ADI">ADI</option>
+            <option value="AKAM">AKAM</option>
+            <option value="GINDAK">GINDAK</option>
+        </select><br><br>
+
+        <label for="gaji">Hasil:</label>
+        <input type="number" id="gaji" required placeholder="Masukkan Hasil"><br><br>
+
+        <label for="bon">Bon:</label>
+        <input type="number" id="bon" required><br><br>
+
+        <label for="dipotong">Dipotong:</label>
+        <input type="number" id="dipotong" required><br><br>
+
+        <label for="namaLahan">Nama Lahan:</label>
+        <select id="namaLahan">
+            <option value="LAHAN UJUNG">Lahan Ujung</option>
+            <option value="LAHAN DEPAN">Lahan Depan</option>
+        </select><br><br>
+
+        <label for="tanggal">Tanggal:</label>
+        <input type="date" id="tanggal" required><br><br>
+
+        <button type="button" onclick="addData()">Tambah Data</button>
+    </form>
+
+    <table id="dataTable">
+        <thead>
+            <tr>
+                <th>Nama Lahan</th>
+                <th>Tanggal</th>
+                <th>Nama</th>
+                <th>Gaji</th>
+                <th>Bon</th>
+                <th>Dipotong</th>
+                <th>Sisa Bon</th>
+                <th>Diterima</th>
+                <th>Aksi</th>
+            </tr>
+        </thead>
+        <tbody id="dataBody">
+            <!-- Data akan ditambahkan di sini -->
+        </tbody>
+    </table>
+
+    <!-- Menambahkan elemen untuk menampilkan total yang diterima -->
+    <p id="hasilHitung"><strong>Total Diterima: 0</strong></p>
+
+    <button onclick="printTable()">Cetak Tabel</button>
+
+    <script>
+        let totalDiterima = 0;
+
+        function addData() {
+            const nama = document.getElementById('nama').value;
+            const gaji = parseFloat(document.getElementById('gaji').value);
+            const bon = parseFloat(document.getElementById('bon').value);
+            const dipotong = parseFloat(document.getElementById('dipotong').value);
+            const namaLahan = document.getElementById('namaLahan').value;
+            const tanggal = document.getElementById('tanggal').value;
+
+            const diterima = gaji - dipotong;
+            const sisaBon = bon - dipotong;
+
+            const tableBody = document.getElementById('dataBody');
+            const row = tableBody.insertRow();
+            row.insertCell(0).innerText = namaLahan;
+            row.insertCell(1).innerText = tanggal;
+            row.insertCell(2).innerText = nama;
+            row.insertCell(3).innerText = gaji.toFixed(0);
+            row.insertCell(4).innerText = bon.toFixed(0);
+            row.insertCell(5).innerText = dipotong.toFixed(0);
+            row.insertCell(6).innerText = sisaBon.toFixed(0);
+            row.insertCell(7).innerText = diterima.toFixed(0);
+            row.insertCell(8).innerHTML = '<button onclick="deleteRow(this)">Hapus</button>';
+
+            totalDiterima += diterima;
+            updateTotalDiterima();
+            
+            // Reset form fields
+            document.getElementById('salaryForm').reset();
+        }
+
+        function deleteRow(button) {
+            const row = button.parentNode.parentNode;
+            const diterima = parseFloat(row.cells[7].innerText);
+            totalDiterima -= diterima;
+            updateTotalDiterima();
+            row.remove();
+        }
+
+        function updateTotalDiterima() {
+            const totalDisplay = document.getElementById('hasilHitung');
+            totalDisplay.innerHTML = `<strong>Total Diterima: ${totalDiterima.toFixed(0)}</strong>`;
+        }
+
+        function calculatePenjumlahan() {
+            const hasilSawit = parseFloat(document.getElementById('hasilSawit').value);
+            const hasil = (hasilSawit * 300) + 200000;
+            const finalResult = hasil / 4;
+            document.getElementById('result').innerText = `Hasil: ${finalResult}`;
+        }
+
+        function printTable() {
+            const table = document.getElementById('dataTable');
+            const newWindow = window.open('', '', 'width=800,height=600');
+            newWindow.document.write('<html><head><title>Cetak Tabel</title>');
+            newWindow.document.write('<style>table { width: 100%; border-collapse: collapse; } th, td { border: 1px solid black; padding: 10px; text-align: center; } th { background-color: #f2f2f2; }</style>');
+            newWindow.document.write('</head><body>');
+            newWindow.document.write(table.outerHTML);
+            newWindow.document.write('</body></html>');
+            newWindow.document.close();
+            newWindow.print();
+        }
+    </script>
+
+</body>
+</html>

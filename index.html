@@ -85,16 +85,19 @@
                 <th>Dipotong</th>
                 <th>Sisa Bon</th>
                 <th>Diterima</th>
-                <th>Aksi</th>
+                <th>Keterangan</th>
             </tr>
         </thead>
         <tbody id="dataBody">
             <!-- Data akan ditambahkan di sini -->
         </tbody>
+        <tfoot>
+            <tr>
+                <td colspan="7"><strong>Total Diterima</strong></td>
+                <td colspan="2" id="hasilHitung"><strong>0</strong></td>
+            </tr>
+        </tfoot>
     </table>
-
-    <!-- Menambahkan elemen untuk menampilkan total yang diterima -->
-    <p id="hasilHitung"><strong>Total Diterima: 0</strong></p>
 
     <button onclick="printTable()">Cetak Tabel</button>
 
@@ -141,7 +144,7 @@
 
         function updateTotalDiterima() {
             const totalDisplay = document.getElementById('hasilHitung');
-            totalDisplay.innerHTML = `<strong>Total Diterima: ${totalDiterima.toFixed(0)}</strong>`;
+            totalDisplay.innerHTML = `<strong>${totalDiterima.toFixed(0)}</strong>`;
         }
 
         function calculatePenjumlahan() {
